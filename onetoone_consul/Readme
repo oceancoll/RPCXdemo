@@ -1,0 +1,29 @@
+Consul
+Consul是HashiCorp公司推出的开源工具，用于实现分布式系统的服务发现与配置。Consul是分布式的、高可用的、 可横向扩展的。它具备以下特性:
+
+服务发现: Consul提供了通过DNS或者HTTP接口的方式来注册服务和发现服务。一些外部的服务通过Consul很容易的找到它所依赖的服务。
+健康检测: Consul的Client提供了健康检查的机制，可以通过用来避免流量被转发到有故障的服务上。
+Key/Value存储: 应用程序可以根据自己的需要使用Consul提供的Key/Value存储。 Consul提供了简单易用的HTTP接口，结合其他工具可以实现动态配置、功能标记、领袖选举等等功能。
+多数据中心: Consul支持开箱即用的多数据中心. 这意味着用户不需要担心需要建立额外的抽象层让业务扩展到多个区域。
+Consul也是使用Go开发的，在Go生态圈也被广泛应用。
+
+服务器
+服务器端的开发和zookeeper、etcd和consul类似。
+
+它主要配置几个参数：
+
+ServiceAddress: 本机的监听地址， 这个对外暴露的监听地址， 格式为tcp@ipaddress:port
+ConsulServers: consul集群的地址
+BasePath: 服务前缀。 如果有多个项目同时使用consul，避免命名冲突，可以设置这个参数，为当前的服务设置命名空间
+Metrics: 用来更新服务的TPS
+UpdateInterval: 服务的刷新间隔， 如果在一定间隔内(当前设为2 * UpdateInterval)没有刷新,服务就会从consul中删除
+
+
+客户端
+配置ConsulDiscovery，使用basepath和consul的地址。
+
+consul agent -dev
+
+go run -tags "consul" server.go
+
+go run -tags "consul" client.go
